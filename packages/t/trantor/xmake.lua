@@ -1,8 +1,8 @@
 package("trantor")
+
     set_homepage("https://github.com/an-tao/trantor/")
     set_description("a non-blocking I/O tcp network lib based on c++14/17")
     set_license("BSD-3-Clause")
-
     add_urls("https://github.com/an-tao/trantor/archive/refs/tags/$(version).tar.gz",
              "https://github.com/an-tao/trantor.git")
 
@@ -21,65 +21,32 @@ package("trantor")
     add_versions("v1.5.0", "8704df75b783089d7e5361174054e0e46a09cc315b851dbc2ab6736e631b090b")
     add_versions("v1.5.2", "6ccd781b3a2703b94689d7da579a38a78bc5c89616cce18ec27fcb6bc0b1620f")
     add_versions("v1.5.5", "5a549c6efebe7ecba73a944cfba4a9713130704d4ccc82af534a2e108b9a0e71")
-    add_versions("v1.5.6", "827aca30e120244a8ede9d07446481328d9a3869228f01fc4978b19301d66e65")
+    add_versions("v1.5.6", "827ACA30E120244A8EDE9D07446481328D9A3869228F01FC4978B19301D66E65")
     add_versions("v1.5.7", "42576563afbf1e58c7d68f758cf3fca4d193496d4e3f82c80069d8389a7839d5")
     add_versions("v1.5.8", "705ec0176681be5c99fcc7af37416ece9d65ff4d907bca764cb11471b104fbf8")
-	add_versions("v1.5.14", "80775d65fd49dfb0eb85d70cd9c0f0cff38a7f46c90db918862c46e03ae63810")
-	
-    add_patches("v1.5.8", path.join(os.scriptdir(), "patches", "1.5.8", "skip_doc.patch" ), "4124f3cc1e486ad75bc5ec2fa454ea5319d68287d0b1d8cfa3b5ab865f8ca5fd")
-    if is_plat("windows", "mingw") then
-	    add_patches("v1.5.8", path.join(os.scriptdir(), "patches", "1.5.8", "fix-win-off_t.patch" ),"f0d7fbfc98085ed8b5f6c7504be29b18ddcd6fe4e14e3551396a643fc4574dc0")
-    end
-
-    add_configs("spdlog", {description = "Allow using the spdlog logging library", default = false, type = "boolean"})
+    add_versions("v1.5.10", "2d47775b3091a1a103bea46f5da017dc03c39883f8d717cf6ba24bdcdf01a15d")
+    add_versions("v1.5.11", "3cff9653380f65acaa6ffa191620a2783e866a4552c3408a6919759ce4cfc1dc")
+    add_versions("v1.5.14", "80775d65fd49dfb0eb85d70cd9c0f0cff38a7f46c90db918862c46e03ae63810")
+    add_versions("v1.5.15", "478d33bc2d48ef2511969c1024eeeee5cf0ef4eea6c65761d0a72b8b9b3004be")
 
     add_deps("cmake")
-    add_deps("openssl", "c-ares")
-
-    if is_plat("windows", "mingw") then
-        add_syslinks("ws2_32", "rpcrt4")
-    elseif is_plat("linux", "bsd") then
+    add_deps("openssl", {system=false})
+    add_deps("c-ares", {optional = true})
+    if is_plat("windows") or is_plat("mingw") then
+        add_syslinks("ws2_32")
+    elseif is_plat("linux") then
         add_syslinks("pthread")
     end
-
-    if on_check then
-        on_check("wasm", function (target)
-            raise("package(trantor) dep(openssl) unsupported platform")
-        end)
-    end
-
-    on_load(function (package)
-        if package:version() and package:version():le("v1.5.15") then
-            package:config_set("spdlog", false)
-        end
-        if package:config("spdlog") then
-            package:add("deps", "spdlog", {configs = {header_only = false, fmt_external_ho = true}})
-        end
-
-        if not package:config("shared") then
-            package:add("defines", "TRANTOR_STATIC_DEFINE")
-        end
-    end)
-
-    on_install(function (package)
+    on_install("windows", "macosx", "linux", "mingw@windows", function (package)
         io.replace("CMakeLists.txt", "\"${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/Findc-ares.cmake\"", "", {plain = true})
         io.replace("CMakeLists.txt", "find_package(c-ares)", "find_package(c-ares CONFIG)", {plain = true})
         io.replace("CMakeLists.txt", "c-ares_lib", "c-ares::cares", {plain = true})
-
         local configs = {}
-        table.insert(configs, "-DCMAKE_BUILD_TYPE=" .. (package:is_debug() and "Debug" or "Release"))
-        table.insert(configs, "-DBUILD_SHARED_LIBS=" .. (package:config("shared") and "ON" or "OFF"))
-        table.insert(configs, "-DUSE_SPDLOG=" .. (package:config("spdlog") and "ON" or "OFF"))
-
-        local opt = {}
-        local openssl = package:dep("openssl")
-        if not openssl:is_system() then
-            table.insert(configs, "-DOPENSSL_ROOT_DIR=" .. openssl:installdir())
-            if not package:is_cross() and is_subhost("macosx", "msys") then
-                opt.cxflags = "-I" .. openssl:installdir("include")
-            end
+        table.insert(configs, "-DCMAKE_BUILD_TYPE=" .. (package:debug() and "Debug" or "Release"))
+        if package:config("pic") ~= false then
+            table.insert(configs, "-DCMAKE_POSITION_INDEPENDENT_CODE=ON")
         end
-        import("package.tools.cmake").install(package, configs, opt)
+        import("package.tools.cmake").install(package, configs)
     end)
 
     on_test(function (package)
@@ -97,3 +64,4 @@ package("trantor")
             }
         ]]}, {configs = {languages = "c++17"}, includes = "trantor/utils/SerialTaskQueue.h"}))
     end)
+
