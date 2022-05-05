@@ -11,9 +11,13 @@ package("trantor")
     add_versions("v1.5.0", "8704df75b783089d7e5361174054e0e46a09cc315b851dbc2ab6736e631b090b")
     add_versions("v1.5.2", "6ccd781b3a2703b94689d7da579a38a78bc5c89616cce18ec27fcb6bc0b1620f")
     add_versions("v1.5.5", "5a549c6efebe7ecba73a944cfba4a9713130704d4ccc82af534a2e108b9a0e71")
+    add_versions("v1.5.6", "827ACA30E120244A8EDE9D07446481328D9A3869228F01FC4978B19301D66E65")
+    add_versions("v1.5.7", "42576563afbf1e58c7d68f758cf3fca4d193496d4e3f82c80069d8389a7839d5")
+    add_versions("v1.5.8", "705ec0176681be5c99fcc7af37416ece9d65ff4d907bca764cb11471b104fbf8")
 
     add_deps("cmake")
-    add_deps("openssl", "c-ares", {optional = true})
+    add_deps("openssl", {system=false})
+    add_deps("c-ares", {optional = true})
     if is_plat("windows") or is_plat("mingw") then
         add_syslinks("ws2_32")
     elseif is_plat("linux") then
