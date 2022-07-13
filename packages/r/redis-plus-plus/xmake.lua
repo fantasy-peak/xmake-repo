@@ -1,6 +1,7 @@
 package("redis-plus-plus")
-    set_homepage("https://github.com/sewenew/redis-plus-plus")
-    set_description("Redis client written in C++")
+    set_homepage("https://github.com/sewenew/redis-plus-plus.git")
+    set_description("")
+    set_license("Apache-2.0 License")
 
     add_urls("https://github.com/sewenew/redis-plus-plus/archive/refs/tags/$(version).tar.gz",
              "https://github.com/sewenew/redis-plus-plus.git")
@@ -15,28 +16,17 @@ package("redis-plus-plus")
     add_versions("1.3.8", "ad521b4a24d1591a1564f945ba6370875b501210222e324f398065251df41641")
     add_versions("1.3.9", "f890bee2bf81e85619e8cdd1189b9249daddf1562a89e04e2b685ba4ca37e0f8")
 
-    add_deps("hiredis")
     add_deps("cmake")
-  
-    if is_plat("linux") then
-        add_syslinks("pthread")
-    end
+    add_deps("hiredis", {system = false})
+    add_deps("libuv", {system = false})
 
-    on_install("linux", "macosx", "windows", function (package)
-        local configs = {"-DREDIS_PLUS_PLUS_BUILD_TEST=OFF"}
-        table.insert(configs, "-DCMAKE_BUILD_TYPE=" .. (package:debug() and "Debug" or "Release"))
-        table.insert(configs, "-DREDIS_PLUS_PLUS_BUILD_STATIC=" .. (package:config("shared") and "OFF" or "ON"))
-        table.insert(configs, "-DREDIS_PLUS_PLUS_BUILD_SHARED=" .. (package:config("shared") and "ON" or "OFF"))
-        import("package.tools.cmake").install(package, configs, {packagedeps = {"hiredis"}})
+    on_install("linux", function (package)
+        local configs = {}
+        table.insert(configs, "-DREDIS_PLUS_PLUS_BUILD_ASYNC=libuv")
+        table.insert(configs, "-DREDIS_PLUS_PLUS_BUILD_CORO=ON")
+        table.insert(configs, "-DREDIS_PLUS_PLUS_CXX_STANDARD=20")
+        table.insert(configs, "-DREDIS_PLUS_PLUS_BUILD_TEST=OFF")
+        table.insert(configs, "-DREDIS_PLUS_PLUS_BUILD_SHARED=OFF")
+        import("package.tools.cmake").install(package, configs)
     end)
-
-    on_test(function (package)
-        assert(package:check_cxxsnippets({
-            test = [[
-              #include <sw/redis++/redis++.h>
-              static void test() {
-                sw::redis::ConnectionOptions connection_options;
-              }
-            ]]
-        }, {configs = {languages = "c++17"}}))
-    end)
+package_end()
