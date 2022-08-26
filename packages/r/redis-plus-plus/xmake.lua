@@ -7,13 +7,12 @@ add_urls("https://github.com/sewenew/redis-plus-plus.git")
 
 add_deps("cmake")
 add_deps("hiredis", {system = false})
-add_deps("boost", {system=false, configs = {all = true}})
 add_deps("libuv", {system = false})
 
 on_install("linux", function (package)
     local configs = {}
     table.insert(configs, "-DREDIS_PLUS_PLUS_BUILD_ASYNC=libuv")
-    table.insert(configs, "-DREDIS_PLUS_PLUS_ASYNC_FUTURE=boost")
+    table.insert(configs, "-DREDIS_PLUS_PLUS_BUILD_CORO=ON")
     table.insert(configs, "-DREDIS_PLUS_PLUS_CXX_STANDARD=20")
     table.insert(configs, "-DREDIS_PLUS_PLUS_BUILD_TEST=OFF")
     table.insert(configs, "-DREDIS_PLUS_PLUS_BUILD_SHARED=OFF")
