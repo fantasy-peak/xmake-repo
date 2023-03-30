@@ -3,9 +3,9 @@ package("trantor")
     set_homepage("https://github.com/an-tao/trantor/")
     set_description("a non-blocking I/O tcp network lib based on c++14/17")
     set_license("BSD-3-Clause")
-
     add_urls("https://github.com/an-tao/trantor/archive/refs/tags/$(version).tar.gz",
              "https://github.com/an-tao/trantor.git")
+
     add_versions("v1.3.0", "524589dc9258e1ace3b2f887b835cfbeccab3c5efc4ba94963c59f3528248d9b")
     add_versions("v1.4.1", "aa3f4dddfd3fd1a6e04f79744e69f23bb6472c314724eaa3051872a2a03bbda9")
     add_versions("v1.5.0", "8704df75b783089d7e5361174054e0e46a09cc315b851dbc2ab6736e631b090b")
@@ -14,6 +14,8 @@ package("trantor")
     add_versions("v1.5.6", "827ACA30E120244A8EDE9D07446481328D9A3869228F01FC4978B19301D66E65")
     add_versions("v1.5.7", "42576563afbf1e58c7d68f758cf3fca4d193496d4e3f82c80069d8389a7839d5")
     add_versions("v1.5.8", "705ec0176681be5c99fcc7af37416ece9d65ff4d907bca764cb11471b104fbf8")
+    add_versions("v1.5.10", "2d47775b3091a1a103bea46f5da017dc03c39883f8d717cf6ba24bdcdf01a15d")
+    add_versions("v1.5.11", "3cff9653380f65acaa6ffa191620a2783e866a4552c3408a6919759ce4cfc1dc")
 
     add_deps("cmake")
     add_deps("openssl", {system=false})
