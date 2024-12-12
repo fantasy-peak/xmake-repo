@@ -24,6 +24,7 @@ package("liburing")
             cflags = "-fPIC"
         end
         import("package.tools.autoconf").install(package, {"--use-libc"}, {makeconfigs = {CFLAGS = cflags}})
+        os.rm(package:installdir("lib/*.so*"))
     end)
 
     on_test(function (package)
