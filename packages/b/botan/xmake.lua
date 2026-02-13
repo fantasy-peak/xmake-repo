@@ -21,12 +21,12 @@ package("botan")
     add_configs("python", {description = "Enable python module", default = false, type = "boolean"})
     add_configs("endian", {description = [[The  parameter should be either “little” or “big”. If not used then if the target architecture has a default, that is used. Otherwise left unspecified, which causes less optimal codepaths to be used but will work on either little or big endian.]], default = nil, type = "string", values = {"little", "big"}})
     add_configs("modules", {description = [[Enable modules, example: {configs = {modules = {"zlib", "lzma"}}}]], type = "table"})
-    add_configs("minimal", {description = "Build a minimal version", default = true, type = "boolean"})
+    add_configs("minimal", {description = "Build a minimal version", default = false, type = "boolean"})
     if is_plat("wasm") then
         add_configs("shared", {description = "Build shared library.", default = false, type = "boolean", readonly = true})
     end
 
-    add_deps("python 3.x", "ninja", {kind = "binary"})
+    add_deps("ninja", {kind = "binary"})
 
     if is_plat("mingw") and is_subhost("msys") then
         add_extsources("pacman::libbotan")
@@ -68,7 +68,7 @@ package("botan")
                 for _, dep in ipairs({"boost", "bzip2", "lzma", "sqlite3", "zlib"}) do
                     if deps:has(dep) then
                         if dep == "boost" then
-                            package:add("deps", "boost", {configs = {filesystem = true}})
+                            package:add("deps", "boost", {configs = {filesystem = true, asio = true}})
                         elseif dep == "lzma" then
                             package:add("deps", "xz")
                         else
