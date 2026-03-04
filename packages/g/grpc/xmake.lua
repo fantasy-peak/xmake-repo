@@ -8,6 +8,7 @@ package("grpc")
 
     add_versions("v1.83.1", "cd95b3a71e29dc733e11af38c8f5a5c1e7bd8b54de6bf316a57afd5bb4438bb3")
     add_versions("v1.82.1", "dfd8a44d9a0c20908bb8083aacd56bd7861dd400ef171002fa63f9c3c426702e")
+    add_versions("v1.78.1", "f9b1d9fe1648024150593efa077ee0f600f9823a21e9d618b4f304e6c09c9902")
     add_versions("v1.69.0", "987763312292c8a6088108173ccde2b336a40f35ae22b5b7b3744e44929aaf9f")
     add_versions("v1.51.3", "17720fd0a690e904a468b4b3dae6fa5ec40b0d1f4d418e2ca092e2f92f06fce0")
     add_versions("v1.62.1", "f672a3a3b370f2853869745110dabfb6c13af93e17ffad4676a0b95b5ec204af")
