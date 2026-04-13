@@ -33,7 +33,7 @@ package("ngtcp2")
     add_deps("cmake")
 
     on_install("macosx", "linux", "windows", "android", "mingw", function (package)
-        local configs = {"-DENABLE_OPENSSL=OFF", "-DBUILD_TESTING=OFF"}
+        local configs = {"-DENABLE_OPENSSL=ON", "-DBUILD_TESTING=OFF"}
         table.insert(configs, "-DCMAKE_BUILD_TYPE=" .. (package:debug() and "Debug" or "Release"))
         table.insert(configs, "-DENABLE_SHARED_LIB=" .. (package:config("shared") and "ON" or "OFF"))
         table.insert(configs, "-DENABLE_STATIC_LIB=" .. (package:config("shared") and "OFF" or "ON"))
