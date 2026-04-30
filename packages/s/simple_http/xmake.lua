@@ -27,6 +27,11 @@ package("simple_http")
     add_deps("nghttp2")
 
     on_load(function (package)
+        if package:is_plat("mingw") then
+            package:add("syslinks", "mswsock", "ws2_32")
+            package:add("ldflags", "-Wa,-mbig-obj")
+            package:add("shflags", "-mbig-obj")
+        end
         if package:config("openssl3") then
             package:add("deps", "openssl3")
         else
@@ -34,17 +39,11 @@ package("simple_http")
         end
     end)
 
-
     on_install("linux", "cross", "bsd", "mingw", function (package)
         import("package.tools.cmake").install(package)
     end)
 
     on_test(function (package)
-        if package:is_plat("mingw") then
-            package:add("syslinks", "mswsock", "ws2_32")
-            package:add("ldflags", "-Wa,-mbig-obj")
-            package:add("shflags", "-mbig-obj")
-        end
         assert(package:check_cxxsnippets({test = [[
             simple_http::Config cfg{.ip = "0.0.0.0",
                                     .port = 6666,
