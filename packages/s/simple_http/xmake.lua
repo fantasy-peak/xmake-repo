@@ -29,8 +29,8 @@ package("simple_http")
     on_load(function (package)
         if package:is_plat("mingw") then
             package:add("syslinks", "mswsock", "ws2_32")
-            package:add("ldflags", "-Wa,-mbig-obj")
-            package:add("shflags", "-mbig-obj")
+            package:add("cxflags", "-Wa,-mbig-obj")
+            package:add("asflags", "-mbig-obj")
         end
         if package:config("openssl3") then
             package:add("deps", "openssl3")
