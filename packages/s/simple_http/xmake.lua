@@ -41,9 +41,9 @@ package("simple_http")
 
     on_test(function (package)
         if package:is_plat("mingw") then
-            add_syslinks("mswsock", "ws2_32")
-            add_ldflags("-Wa,-mbig-obj")
-            add_shflags("-mbig-obj")
+            package:add("syslinks", "mswsock", "ws2_32")
+            package:add("ldflags", "-Wa,-mbig-obj")
+            package:add("shflags", "-mbig-obj")
         end
         assert(package:check_cxxsnippets({test = [[
             simple_http::Config cfg{.ip = "0.0.0.0",
