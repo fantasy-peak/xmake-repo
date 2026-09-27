@@ -35,6 +35,7 @@ package("ngtcp2")
     add_versions("0.1.0", "9a5266544d083c332746450344ebd6c8d6bf3c75c492a54c79abc56f2c47415d")
 
     add_deps("cmake")
+    add_deps("openssl3")
 
     on_install("macosx", "linux", "windows", "android", "mingw", function (package)
         local configs = {"-DENABLE_OPENSSL=ON", "-DBUILD_TESTING=OFF"}
